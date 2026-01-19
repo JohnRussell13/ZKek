@@ -1,18 +1,21 @@
-circom zkek.circom --r1cs --sym --wasm
+// node generate_witness.js zkek.wasm inputs.json witness.wtns
+// snarkjs g16p zkek_0003.zkey witness.wtns proof.json public.json
+
+circom zkek.circom --r1cs --wasm
 
 snarkjs ptn bn128 12 pot12_0000.ptau
 snarkjs ptc pot12_0000.ptau pot12_0001.ptau
 snarkjs ptc pot12_0001.ptau pot12_0002.ptau
 snarkjs ptc pot12_0002.ptau pot12_0003.ptau
 
-snarkjs pt2 pot12_0003.ptau pot12_final.ptau -v
+snarkjs pt2 pot12_0003.ptau pot12_final.ptau
 
 snarkjs g16s zkek.r1cs pot12_final.ptau zkek_0000.zkey
 snarkjs zkc zkek_0000.zkey zkek_0001.zkey
 snarkjs zkc zkek_0001.zkey zkek_0002.zkey
 snarkjs zkc zkek_0002.zkey zkek_0003.zkey
+snarkjs zkev zkek_0003.zkey verification_key.json
 
-node generate_witness.js zkek.wasm inputs.json witness.wtns
+snarkjs g16f inputs.json zkek_js/zkek.wasm zkek_0003.zkey proof.json public.json
 
-snarkjs zkey export verificationkey multiplier2_0001.zkey verification_key.json
-snarkjs g16p multiplier2_0001.zkey witness.wtns proof.json public.json
+snarkjs g16v verification_key.json public.json proof.json
