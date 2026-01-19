@@ -5,14 +5,23 @@ This repository contains a Circom circuit and the build artifacts needed to gene
 ## Structure
 
 circom/
+
 ├── build/
-│ ├── proof/ # proof + public inputs 
-│ ├── r1cs/ # compiled circuit + wasm + JS 
-│ └── zkey/ # proving and verification keys 
-├── circuits/ # Circom source files 
-├── inputs/ # JSON input files 
-├── scripts/ # build scripts 
-├── package.json 
+
+│ ├── proof/ # proof + public inputs
+
+│ ├── r1cs/ # compiled circuit + wasm + JS
+
+│ └── zkey/ # proving and verification keys
+
+├── circuits/ # Circom source files
+
+├── inputs/ # JSON input files
+
+├── scripts/ # build scripts
+
+├── package.json
+
 └── README.md
 
 ## Requirements
