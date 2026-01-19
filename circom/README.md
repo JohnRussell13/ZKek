@@ -4,25 +4,18 @@ This repository contains a Circom circuit and the build artifacts needed to gene
 
 ## Structure
 
+```text
 circom/
-
 ├── build/
-
 │ ├── proof/ # proof + public inputs
-
 │ ├── r1cs/ # compiled circuit + wasm + JS
-
 │ └── zkey/ # proving and verification keys
-
 ├── circuits/ # Circom source files
-
 ├── inputs/ # JSON input files
-
 ├── scripts/ # build scripts
-
 ├── package.json
-
 └── README.md
+```
 
 ## Requirements
 - Node.js + npm
@@ -37,6 +30,7 @@ Install dependencies:
 
 ```bash
 ./scripts/setup.sh
+```
 
 This will download node_modules for circomlib.
 
@@ -46,6 +40,7 @@ Compile circom circuit and generate keys:
 
 ```bash
 ./scripts/compile.sh
+```
 
 ## Prove
 
@@ -53,3 +48,4 @@ Generate proof for your inputs:
 
 ```bash
 ./scripts/prove.sh
+```
