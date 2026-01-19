@@ -1,6 +1,8 @@
-pragma circom 2.1.6;
+pragma circom 2.2.3;
 
-template SomeCircuit() {
+// include "./node_modules/circomlib/circuits/"
+
+template ZKek() {
   // inputs
   signal input a;
   signal input b;
@@ -10,4 +12,4 @@ template SomeCircuit() {
   c  === a * b;
 }
 
-component main = SomeCircuit();
+component main{public [a, b]} = ZKek();
