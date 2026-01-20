@@ -1,0 +1,27 @@
+[package]
+name = "zkek"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "zkek"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build"]
+
+[patch.crates-io]
+constant_time_eq = "=0.3.1"
+
+[dependencies]
+anchor-lang = "0.32.1"
+groth16-solana = "0.2.0"
+solana-bn254 = "3.2.1"
+ark-bn254 = "0.5"
+ark-serialize = "0.5"
