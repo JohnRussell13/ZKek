@@ -15,7 +15,11 @@ declare_id!("zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k");
 pub mod zkek {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        initialize::handler(ctx)
+    pub fn initialize(
+        ctx: Context<Initialize>,
+        proof: [u8; 256],
+        public_inputs: [[u8; 32]; 2],
+    ) -> Result<()> {
+        initialize::handler(ctx, &proof, &public_inputs)
     }
 }
