@@ -4,43 +4,52 @@ include "../node_modules/circomlib/circuits/poseidon.circom";
 include "../node_modules/circomlib/circuits/switcher.circom";
 include "../node_modules/circomlib/circuits/bitify.circom";
 
-template CheckSecretKey() {
+template GetPublicKey() {
 	signal input secretKey;
-	signal input publicKey;
+	signal output publicKey;
 
-	component poseidonComponent = Poseidon(1);
+	var keySeed = 6;
+
+	component poseidonComponent = Poseidon(2);
 	secretKey ==> poseidonComponent.inputs[0];
-	publicKey === poseidonComponent.out;
+	keySeed ==> poseidonComponent.inputs[1];
+	poseidonComponent.out ==> publicKey;
 }
 
 template ZKek(merkleDepth) {
 	// secret witnesses
 	signal input secretKey;
-	signal input publicKey;
 	signal input merkleIndex;
 	signal input merklePath[merkleDepth];
 
 	// public witnesses
 	signal input merkleRoot;
+	signal input nullifierHash; // TODO
 
-	// 1st check req
-	component keyChecker = CheckSecretKey();
+	// fake witnesses
+	// ...
 
-	// 2nd check req
+	// Req for public key
+	signal publicKey;
+	component publicKeyGetter = GetPublicKey();
+
+	// Check Merkle tree root
 	signal merkleHash[merkleDepth+1]; // leaf + 1 node per layer
 	component hasherMerkle[merkleDepth+1];
-	var merkleSeed = 67;
+	var merkleSeed = 7;
 	component n2bMerkleIndex = Num2Bits(merkleDepth); // little-endian
 	component switcher[merkleDepth];
 
-	// CHECKS
-
-	// 1st check -- keys
-	secretKey ==> keyChecker.secretKey;
-	publicKey ==> keyChecker.publicKey;
+	// 3rd check req
+	component hasherNullifier;
 
 
-	// 2nd check -- Merkle root
+	// Get public key
+	secretKey ==> publicKeyGetter.secretKey;
+	publicKeyGetter.publicKey ==> publicKey;
+
+
+	// Check Merkle tree root
 	merkleIndex ==> n2bMerkleIndex.in;
 
 	hasherMerkle[0] = Poseidon(2);
@@ -60,6 +69,15 @@ template ZKek(merkleDepth) {
 		hasherMerkle[i+1].out ==> merkleHash[i+1];
 	}
 
+	merkleRoot === merkleHash[merkleDepth]
+
+	// 3rd check -- nullifier hash
+	hasherNullifier = Poseidon(1);
+	secretKey ==> hasherNullifier.inputs[0];
+	hasherNullifier.out === nullifierHash;
+
+	// Dummy checks
+	// ...
 }
 
-component main{public [merkleRoot]} = ZKek(3);
+component main{public [merkleRoot, nullifierHash]} = ZKek(3);
