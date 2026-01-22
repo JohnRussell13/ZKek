@@ -121,11 +121,8 @@ async function main() {
     nullifierHash,
   };
 
-  fs.writeFileSync(
-    "../../circom/inputs/inputs.json",
-    JSON.stringify(input, null, 2),
-  );
-  console.log("Input written to input.json");
+  fs.writeFileSync("inputs.json", JSON.stringify(input, null, 2));
+  console.log("Input written to inputs.json");
 
   console.log(publicKey);
   console.log(tree);
