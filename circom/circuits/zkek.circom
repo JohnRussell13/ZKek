@@ -16,68 +16,82 @@ template GetPublicKey() {
 	poseidonComponent.out ==> publicKey;
 }
 
+template MerkleTreeHash() {
+	signal input n2bMerkleIndexBit;
+	signal input merkleHash;
+	signal input merklePath;
+	signal output out;
+
+	component switcher = Switcher();
+	n2bMerkleIndexBit ==> switcher.sel;
+	merkleHash ==> switcher.L;
+	merklePath ==> switcher.R;
+
+	component poseidonComponent = Poseidon(2);
+	switcher.outL ==> poseidonComponent.inputs[0];
+	switcher.outR ==> poseidonComponent.inputs[1];
+	poseidonComponent.out ==> out;
+}
+
+template MerkleTreeCheck(merkleDepth) {
+	signal input merkleRoot;
+	signal input merkleIndex;
+	signal input merklePath[merkleDepth];
+	signal input publicKey;
+
+	signal merkleHash[merkleDepth+1]; // leaf + 1 node per layer
+	var merkleSeed = 7;
+
+	component n2bMerkleIndex = Num2Bits(merkleDepth); // little-endian
+	merkleIndex ==> n2bMerkleIndex.in;
+
+	component poseidonComponent = Poseidon(2);
+	publicKey ==> poseidonComponent.inputs[0];
+	merkleSeed ==> poseidonComponent.inputs[1];
+	poseidonComponent.out ==> merkleHash[0];
+
+	component merkleTreeHasher[merkleDepth];
+	for (var i = 0; i < merkleDepth; i++) {
+		merkleTreeHasher[i] = MerkleTreeHash();
+		n2bMerkleIndex.out[i] ==> merkleTreeHasher[i].n2bMerkleIndexBit;
+		merkleHash[i] ==> merkleTreeHasher[i].merkleHash;
+		merklePath[i] ==> merkleTreeHasher[i].merklePath;
+		merkleTreeHasher[i].out ==> merkleHash[i+1];
+	}
+
+	merkleRoot === merkleHash[merkleDepth];
+}
+
+template NullifierCheck() {
+	signal input secretKey;
+	signal input nullifierHash;
+
+	component poseidonComponent = Poseidon(1);
+	secretKey ==> poseidonComponent.inputs[0];
+	poseidonComponent.out === nullifierHash;
+}
+
 template ZKek(merkleDepth) {
-	// secret witnesses
 	signal input secretKey;
 	signal input merkleIndex;
 	signal input merklePath[merkleDepth];
 
-	// public witnesses
 	signal input merkleRoot;
-	signal input nullifierHash; // TODO
+	signal input nullifierHash;
 
-	// fake witnesses
-	// ...
-
-	// Req for public key
-	signal publicKey;
 	component publicKeyGetter = GetPublicKey();
-
-	// Check Merkle tree root
-	signal merkleHash[merkleDepth+1]; // leaf + 1 node per layer
-	component hasherMerkle[merkleDepth+1];
-	var merkleSeed = 7;
-	component n2bMerkleIndex = Num2Bits(merkleDepth); // little-endian
-	component switcher[merkleDepth];
-
-	// 3rd check req
-	component hasherNullifier;
-
-
-	// Get public key
 	secretKey ==> publicKeyGetter.secretKey;
-	publicKeyGetter.publicKey ==> publicKey;
+	signal publicKey <== publicKeyGetter.publicKey;
 
+	component merkleTreeChecker = MerkleTreeCheck(merkleDepth);
+	merkleRoot ==> merkleTreeChecker.merkleRoot;
+	merkleIndex ==> merkleTreeChecker.merkleIndex;
+	merklePath ==> merkleTreeChecker.merklePath;
+	publicKey ==> merkleTreeChecker.publicKey;
 
-	// Check Merkle tree root
-	merkleIndex ==> n2bMerkleIndex.in;
-
-	hasherMerkle[0] = Poseidon(2);
-	publicKey ==> hasherMerkle[0].inputs[0];
-	merkleSeed ==> hasherMerkle[0].inputs[1];
-	hasherMerkle[0].out ==> merkleHash[0];
-
-	for (var i = 0; i < merkleDepth; i++) {
-		switcher[i] = Switcher();
-		n2bMerkleIndex.out[i] ==> switcher[i].sel;
-		merkleHash[i] ==> switcher[i].L;
-		merklePath[i] ==> switcher[i].R;
-
-		hasherMerkle[i+1] = Poseidon(2);
-		switcher[i].outL ==> hasherMerkle[i+1].inputs[0];
-		switcher[i].outR ==> hasherMerkle[i+1].inputs[1];
-		hasherMerkle[i+1].out ==> merkleHash[i+1];
-	}
-
-	merkleRoot === merkleHash[merkleDepth]
-
-	// 3rd check -- nullifier hash
-	hasherNullifier = Poseidon(1);
-	secretKey ==> hasherNullifier.inputs[0];
-	hasherNullifier.out === nullifierHash;
-
-	// Dummy checks
-	// ...
+	component nullifierChecker = NullifierCheck();
+	secretKey ==> nullifierChecker.secretKey;
+	nullifierHash ==> nullifierChecker.nullifierHash;
 }
 
 component main{public [merkleRoot, nullifierHash]} = ZKek(3);
