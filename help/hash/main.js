@@ -24,6 +24,8 @@ function adjustCache(leaf, index, tree, zeros, cache, poseidon, merkleDepth) {
   const newCache = [];
   const newTree = tree;
 
+  let checkIfLast = 1;
+
   newCache[0] = leaf;
   newTree[0][tempIndex] = leaf;
   for (let i = 0; i < merkleDepth; i++) {
@@ -31,11 +33,15 @@ function adjustCache(leaf, index, tree, zeros, cache, poseidon, merkleDepth) {
     const sel = tempIndex & 1;
     tempIndex = tempIndex >> 1;
 
-    newCache[i + 1] =
+    checkIfLast = checkIfLast & sel;
+
+    const temp =
       sel === 0
         ? hash(poseidon, [tempValue, zeros[i]])
         : hash(poseidon, [cache[i], tempValue]);
-    newTree[i + 1][tempIndex] = newCache[i + 1];
+    newTree[i + 1][tempIndex] = temp;
+
+    newCache[i + 1] = checkIfLast ? temp : cache[i + 1];
   }
 
   return [newCache, newTree];
@@ -121,6 +127,7 @@ async function main() {
   );
   console.log("Input written to input.json");
 
+  console.log(publicKey);
   console.log(tree);
   console.log(input);
 }
