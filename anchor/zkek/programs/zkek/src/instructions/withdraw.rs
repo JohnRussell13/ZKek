@@ -30,6 +30,7 @@ pub struct Withdraw<'info> {
     )]
     pub nullifier_account: Account<'info, Nullifier>,
 
+    /// CHECK: Admin account is validated against global_state.admin in the handler
     pub admin: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
