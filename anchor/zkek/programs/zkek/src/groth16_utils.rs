@@ -1,4 +1,3 @@
-use anchor_lang::prelude::msg;
 use ark_bn254::g1::G1Affine;
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Compress, Validate};
 use groth16_solana::{
