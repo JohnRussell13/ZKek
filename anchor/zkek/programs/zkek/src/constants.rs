@@ -2,7 +2,15 @@ use anchor_lang::prelude::*;
 use groth16_solana::groth16::Groth16Verifyingkey;
 
 #[constant]
-pub const SEED: &str = "anchor";
+pub const GLOBAL_STATE_SEED: &str = "GLOBAL_STATE";
+pub const MERKLE_TREE_SEED: &str = "MERKLE_TREE";
+pub const NULLIFIER_SEED: &str = "NULLIFIER";
+pub const ACTIVE_ROOTS: usize = 20;
+pub const ANCHOR_DISCRIMINATOR: usize = 8;
+pub const PUBLIC_INPUTS: usize = 2;
+pub const TRANSFER_AMOUNT_LAMPORTS: u64 = 100_000_000;
+pub const BASIS_POINTS: u16 = 10_000;
+pub const MAX_LEAVES: u32 = 1048576;
 
 pub const VERIFYING_KEY: Groth16Verifyingkey = Groth16Verifyingkey {
     nr_pubinputs: 2,
