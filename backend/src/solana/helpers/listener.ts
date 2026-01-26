@@ -1,5 +1,6 @@
 import { createSolanaRpc, createSolanaRpcSubscriptions, getBase58Codec, type Address, type Signature } from "@solana/kit";
 import { ZKEK_PROGRAM_ADDRESS, getDepositEventDecoder, type DepositEvent } from "../generated";
+import { commitPendingUpdate } from "../../services/merkleTree.js";
 
 const DEPOSIT_EVENT_DISCRIMINATOR = new Uint8Array([120, 248, 61, 83, 31, 142, 107, 144]);
 
@@ -78,7 +79,15 @@ export async function startDepositEventListener(rpcUrl: string, wsUrl: string, p
     try {
       const event = await getDepositEventFromTransaction(rpcUrl, signature, programAddress);
       if (event) {
-        console.log(`NewRoot: ${Buffer.from(event.newRoot).toString("hex")}`);
+        const merkleRoot = Buffer.from(event.newRoot).toString("hex");
+        console.log(`Deposit event received - NewRoot: ${merkleRoot}`);
+
+        const committed = await commitPendingUpdate(merkleRoot);
+        if (committed) {
+          console.log(`Successfully updated merkle tree for root: ${merkleRoot}`);
+        } else {
+          console.warn(`No pending update found for merkle root: ${merkleRoot}`);
+        }
       }
     } catch (error) {
       console.error(`Error processing transaction ${signature}:`, error);
