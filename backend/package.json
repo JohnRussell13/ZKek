@@ -1,0 +1,51 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts",
+    "migrate": "node-pg-migrate -m src/migrations",
+    "populate": "tsx scripts/populateDb.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.5",
+    "@types/circomlibjs": "^0.1.6",
+    "@types/cors": "^2.8.19",
+    "@types/dotenv-safe": "^9.1.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "@types/pg": "^8.16.0",
+    "node-pg-migrate": "^8.0.4",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@codama/nodes-from-anchor": "^1.3.8",
+    "@codama/renderers-js": "^1.5.5",
+    "@codama/renderers-rust": "^1.2.9",
+    "@solana/kit": "^5.4.0",
+    "circomlibjs": "^0.1.7",
+    "codama": "^1.5.0",
+    "cors": "^2.8.6",
+    "dotenv-safe": "^9.1.0",
+    "express": "^5.2.1",
+    "pg": "^8.17.2"
+  }
+}

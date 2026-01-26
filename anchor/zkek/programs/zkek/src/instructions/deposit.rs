@@ -2,6 +2,7 @@ use anchor_lang::prelude::*;
 
 use crate::{ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED, TRANSFER_AMOUNT_LAMPORTS, error::ErrorCode, state::MerkleTree};
 
+#[event_cpi]
 #[derive(Accounts)]
 pub struct Deposit<'info> {
     #[account(mut)]
@@ -54,5 +55,12 @@ pub fn handler(
     merkle_tree.active_roots[next_index] = new_root;
     merkle_tree.current_leaf_index += 1;
 
+    emit_cpi!(DepositEvent { new_root: new_root });
+
     Ok(())
+}
+
+#[event]
+pub struct DepositEvent {
+    pub new_root: [u8; 32],
 }
