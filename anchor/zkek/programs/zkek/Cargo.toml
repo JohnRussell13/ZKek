@@ -20,7 +20,7 @@ idl-build = ["anchor-lang/idl-build"]
 constant_time_eq = "=0.3.1"
 
 [dependencies]
-anchor-lang = "0.32.1"
+anchor-lang = { version = "0.32.1", features = ["event-cpi"] }
 groth16-solana = "0.2.0"
 solana-bn254 = "3.2.1"
 ark-bn254 = "0.5"
