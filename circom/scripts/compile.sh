@@ -10,7 +10,7 @@ cd ..
 mkdir -p zkey
 cd zkey
 
-snarkjs ptn bn128 12 pot12_0000.ptau
+snarkjs ptn bn128 15 pot12_0000.ptau
 echo "input_value" | snarkjs ptc pot12_0000.ptau pot12_0001.ptau
 
 snarkjs pt2 pot12_0001.ptau pot12_final.ptau

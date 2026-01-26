@@ -24,7 +24,7 @@ export const initiateDeposit = async (req: Request, res: Response) => {
 };
 
 export const initiateWithdraw = async (req: Request, res: Response) => {
-  const { leaf } = req.body;
+  const { leaf } = req.body; // TODO: use index
 
   if (!leaf) {
     return res.json({ error: "Leaf must be provided!" });

@@ -94,4 +94,4 @@ template ZKek(merkleDepth) {
 	nullifierHash ==> nullifierChecker.nullifierHash;
 }
 
-component main{public [merkleRoot, nullifierHash]} = ZKek(3);
+component main{public [merkleRoot, nullifierHash]} = ZKek(20);

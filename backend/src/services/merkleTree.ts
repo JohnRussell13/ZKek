@@ -31,7 +31,6 @@ export const addNewLeaf = async (leaf: string) => {
   const oldRoot = oldRootNode.hash;
 
   const poseidon = await circomlibjs.buildPoseidon();
-  const zeros = generateZeroHashes(MERKLE_DEPTH, poseidon);
 
   // Calculate all sibling indices upfront
   const siblingQueries: Array<{ level: number; idx: number; isRight: boolean }> = [];
@@ -59,7 +58,7 @@ export const addNewLeaf = async (leaf: string) => {
 
   for (let i = 0; i < MERKLE_DEPTH; i++) {
     const { level, isRight } = siblingQueries[i];
-    const siblingHash = siblings[i]?.hash || zeros[level];
+    const siblingHash = siblings[i]?.hash;
 
     const parentHash = isRight ? hash(poseidon, [siblingHash, currentHash]) : hash(poseidon, [currentHash, siblingHash]);
 
@@ -99,7 +98,7 @@ export const getPendingUpdate = (merkleRoot: string): PendingMerkleUpdate | unde
   return pendingUpdates.get(merkleRoot);
 };
 
-export const removePendingUpdate = (merkleRoot: string): boolean => {
+export const removePendingUpdate = (merkleRoot: string): boolean => { // TODO: DELETE ALL pendingUpdates
   return pendingUpdates.delete(merkleRoot);
 };
 
