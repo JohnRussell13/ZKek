@@ -28,20 +28,22 @@ function adjustCache(leaf, index, tree, zeros, cache, poseidon, merkleDepth) {
 
   newCache[0] = leaf;
   newTree[0][tempIndex] = leaf;
+
+  let tempValueOld = leaf;
   for (let i = 0; i < merkleDepth; i++) {
-    tempValue = newCache[i];
+    tempValue = tempValueOld;
     const sel = tempIndex & 1;
     tempIndex = tempIndex >> 1;
 
     checkIfLast = checkIfLast & sel;
 
-    const temp =
+    tempValueOld =
       sel === 0
         ? hash(poseidon, [tempValue, zeros[i]])
         : hash(poseidon, [cache[i], tempValue]);
-    newTree[i + 1][tempIndex] = temp;
+    newTree[i + 1][tempIndex] = tempValueOld;
 
-    newCache[i + 1] = checkIfLast ? temp : cache[i + 1];
+    newCache[i + 1] = checkIfLast ? tempValueOld : cache[i + 1];
   }
 
   return [newCache, newTree];
@@ -78,7 +80,7 @@ async function main() {
 
   const secretKey = "124";
   const merkleIndex = 2;
-  const merkleDepth = 3;
+  const merkleDepth = 20;
 
   const publicKey = hash(poseidon, [secretKey, "6"]);
 
@@ -92,7 +94,7 @@ async function main() {
 
   let leaf;
 
-  for (let i = 0; i < 2 ** merkleDepth; i++) {
+  for (let i = 0; i < 8; i++) {
     // console.log(tree);
     // console.log(cache);
     // console.log("-----------");
