@@ -20,6 +20,7 @@ export const initiateDeposit = async (req: Request, res: Response) => {
     leafIndex: result.leafIndex,
     newRoot: result.newRoot,
     currentRoot: result.currentRoot,
+    merklePath: result.merklePath,
   });
 };
 

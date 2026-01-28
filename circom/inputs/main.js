@@ -85,6 +85,7 @@ async function main() {
   const publicKey = hash(poseidon, [secretKey, "6"]);
 
   const leaves = ["1", "2", publicKey, "4", "5", "6", "7", "8"];
+  // const leaves = ["123"];
 
   const zeros = generateZeroHashes(merkleDepth, poseidon);
   let cache = generateZeroHashes(merkleDepth, poseidon);
@@ -123,8 +124,8 @@ async function main() {
     nullifierHash,
   };
 
-  fs.writeFileSync("inputs.json", JSON.stringify(input, null, 2));
-  console.log("Input written to inputs.json");
+  fs.writeFileSync("withdraw.json", JSON.stringify(input, null, 2));
+  console.log("Input written to withdraw.json");
 
   console.log(publicKey);
   console.log(tree);

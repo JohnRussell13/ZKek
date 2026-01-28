@@ -80,9 +80,11 @@ export const addNewLeaf = async (leaf: string) => {
     nodeUpdates,
   };
 
-  storePendingUpdate(result.newRoot, result);
+  storePendingUpdate(result.newRoot, result); // TODO : CHECK IF EXISTS ALREADY
 
-  return { leafIndex: inserting_leaf.idx, newRoot: currentHash, currentRoot: oldRoot };
+  const path = siblings.map((node) => node.hash);
+
+  return { leafIndex: inserting_leaf.idx, newRoot: currentHash, currentRoot: oldRoot, merklePath: path };
 };
 
 export const applyNodeUpdates = async (nodeUpdates: MerkleNodeUpdate[]) => {
