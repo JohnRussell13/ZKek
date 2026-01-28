@@ -1,0 +1,53 @@
+function toByteArray(decimalStr) {
+  let num = BigInt(decimalStr);
+  const bytes = [];
+  for (let i = 0; i < 32; i++) {
+    bytes.unshift(Number(num & 0xffn));
+    num >>= 8n;
+  }
+  return bytes;
+}
+
+function proofToBytes(proof) {
+  return [
+    ...toByteArray(proof.pi_a[0]),
+    ...toByteArray(proof.pi_a[1]),
+    ...toByteArray(proof.pi_b[0][0]),
+    ...toByteArray(proof.pi_b[0][1]),
+    ...toByteArray(proof.pi_b[1][0]),
+    ...toByteArray(proof.pi_b[1][1]),
+    ...toByteArray(proof.pi_c[0]),
+    ...toByteArray(proof.pi_c[1]),
+  ];
+}
+
+// Usage
+const proof = {
+  pi_a: [
+    "6452693965043847606608462047738013012969370641576107800422661102865090704352",
+    "11235149634803438365419819895172103204780392503168679235095668569255393521533",
+    "1",
+  ],
+  pi_b: [
+    [
+      "5989208610108954854356500967984096483685548509217496383118186744447099656023",
+      "18019239880841626965823209069827517549479315180333561344540114520374873873176",
+    ],
+    [
+      "14695043574314910982365656334846841567367911876359442684846176786752862430488",
+      "9339858434307014787943671478911592394337074204422753815207220506705038369827",
+    ],
+    ["1", "0"],
+  ],
+  pi_c: [
+    "8926083369882505918822530379621175490118487735282154514812247798485515861793",
+    "20782822127845508273785125917722073367529500616035646127971776878649993432577",
+    "1",
+  ],
+  protocol: "groth16",
+  curve: "bn128",
+};
+
+const bytes = proofToBytes(proof);
+console.log(bytes.length); // 256
+console.log(JSON.stringify(bytes));

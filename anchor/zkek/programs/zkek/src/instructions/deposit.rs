@@ -33,11 +33,12 @@ pub fn handler(
         return err!(ErrorCode::TreeFull);
     }
 
-    if merkle_tree.current_leaf_index + 1 != leaf_index {
+    if merkle_tree.current_leaf_index != leaf_index {
         return err!(ErrorCode::WrongLeafIndex);
     }
 
     let current_root_index = merkle_tree.current_root_index as usize % ACTIVE_ROOTS;
+    msg!("CURRENT ROOT INDEX: {}", current_root_index);
     if merkle_tree.active_roots[current_root_index] != old_root {
         return err!(ErrorCode::OldRootNotActive);
     }

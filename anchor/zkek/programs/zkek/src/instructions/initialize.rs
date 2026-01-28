@@ -51,7 +51,10 @@ pub fn handler(ctx: Context<Initialize>, fee: u16) -> Result<()> {
     global_state.bump = ctx.bumps.global_state;
 
     // TODO: change with the merkle root of hashes of empty leaves
-    let initial_root = [0; 32];
+    let initial_root = [
+      20, 112, 226, 52, 151, 160, 106, 71, 24, 144, 226, 234, 238, 41, 81, 211,
+      133, 126, 71, 4, 2, 78, 91, 71, 0, 217, 54, 44, 32, 162, 160, 217,
+    ];
     merkle_tree.current_leaf_index = 0;
     merkle_tree.current_root_index = 0;
     merkle_tree.active_roots = [[0; 32]; ACTIVE_ROOTS];
