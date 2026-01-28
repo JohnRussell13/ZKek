@@ -1,8 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    error::ErrorCode, state::MerkleTree, ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED,
-    TRANSFER_AMOUNT_LAMPORTS,
+    ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED, TRANSFER_AMOUNT_LAMPORTS, error::ErrorCode, groth16_utils::verify_groth16_proof, state::MerkleTree
 };
 
 #[event_cpi]
@@ -26,6 +25,7 @@ pub fn handler(
     new_root: [u8; 32],
     old_root: [u8; 32],
     leaf_index: u32,
+    proof: [u8; 256],
 ) -> Result<()> {
     let merkle_tree = &mut ctx.accounts.merkle_tree;
 
@@ -41,6 +41,9 @@ pub fn handler(
     if merkle_tree.active_roots[current_root_index] != old_root {
         return err!(ErrorCode::OldRootNotActive);
     }
+
+    let public_inputs = [new_root, old_root];
+    verify_groth16_proof(&proof, &public_inputs).map_err(|_| error!(ErrorCode::InvalidProof))?;
 
     anchor_lang::system_program::transfer(
         CpiContext::new(

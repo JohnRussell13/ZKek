@@ -26,7 +26,7 @@ pub mod zkek {
         leaf_index: u32,
         proof: [u8; 256],
     ) -> Result<()> {
-        deposit::handler(ctx, new_root, old_root, leaf_index)
+        deposit::handler(ctx, new_root, old_root, leaf_index, proof)
     }
 
     pub fn withdraw(
