@@ -1,5 +1,5 @@
-use anchor_lang::prelude::*;
 use crate::ACTIVE_ROOTS;
+use anchor_lang::prelude::*;
 
 #[account]
 #[derive(InitSpace)]

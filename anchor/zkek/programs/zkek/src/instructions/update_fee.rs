@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::{GLOBAL_STATE_SEED, error::ErrorCode, state::GlobalState};
+use crate::{error::ErrorCode, state::GlobalState, GLOBAL_STATE_SEED};
 
 #[derive(Accounts)]
 pub struct UpdateFee<'info> {
@@ -16,10 +16,7 @@ pub struct UpdateFee<'info> {
     pub global_state: Account<'info, GlobalState>,
 }
 
-pub fn handler(
-    ctx: Context<UpdateFee>,
-    new_fee: u16,
-) -> Result<()> {
+pub fn handler(ctx: Context<UpdateFee>, new_fee: u16) -> Result<()> {
     ctx.accounts.global_state.fee = new_fee;
 
     Ok(())

@@ -1,6 +1,10 @@
 use anchor_lang::prelude::*;
 
-use crate::{ACTIVE_ROOTS, ANCHOR_DISCRIMINATOR, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, program::Zkek, state::{GlobalState, MerkleTree}};
+use crate::{
+    program::Zkek,
+    state::{GlobalState, MerkleTree},
+    ACTIVE_ROOTS, ANCHOR_DISCRIMINATOR, GLOBAL_STATE_SEED, MERKLE_TREE_SEED,
+};
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
@@ -38,10 +42,7 @@ pub struct Initialize<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handler(
-    ctx: Context<Initialize>,
-    fee: u16, 
-) -> Result<()> {
+pub fn handler(ctx: Context<Initialize>, fee: u16) -> Result<()> {
     let global_state = &mut ctx.accounts.global_state;
     let merkle_tree = &mut ctx.accounts.merkle_tree;
 

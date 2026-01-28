@@ -1,9 +1,6 @@
 use ark_bn254::g1::G1Affine;
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Compress, Validate};
-use groth16_solana::{
-    errors::Groth16Error,
-    groth16::Groth16Verifier,
-};
+use groth16_solana::{errors::Groth16Error, groth16::Groth16Verifier};
 use std::ops::Neg;
 
 use crate::VERIFYING_KEY;
