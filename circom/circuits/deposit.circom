@@ -16,11 +16,7 @@ template Deposit(merkleDepth) {
 	merklePath ==> merkleTreeChecker.merklePath;
 	publicKey ==> merkleTreeChecker.publicKey;
 
-	component nullifierChecker = NullifierCheck();
-	secretKey ==> nullifierChecker.secretKey;
-	nullifierHash ==> nullifierChecker.nullifierHash;
-
 	signal dummy <== oldMerkleRoot * oldMerkleRoot;
 }
 
-component main{public [merkleRoot, nullifierHash]} = Deposit(20);
+component main{public [merkleRoot, oldMerkleRoot]} = Deposit(20);

@@ -4,6 +4,7 @@ import * as circomlibjs from "circomlibjs";
 const LEVEL_ZERO = 0;
 const MERKLE_DEPTH = 20;
 const EMPTY_LEAF_HASH = "279607406330385469699708956735380224008485527346210613759547827362749687966";
+const HASH_CONSTANT = "7";
 
 interface MerkleNodeUpdate {
   level: number;
@@ -47,7 +48,7 @@ export const addNewLeaf = async (leaf: string) => {
   const siblings = await Promise.all(siblingPromises);
 
   let currentIdx = inserting_leaf.idx;
-  let currentHash = leaf;
+  let currentHash = hash(poseidon, [leaf, HASH_CONSTANT]);
   const nodeUpdates: MerkleNodeUpdate[] = [];
 
   nodeUpdates.push({
@@ -80,9 +81,11 @@ export const addNewLeaf = async (leaf: string) => {
     nodeUpdates,
   };
 
-  storePendingUpdate(result.newRoot, result);
+  storePendingUpdate(result.newRoot, result); // TODO : CHECK IF EXISTS ALREADY
 
-  return { leafIndex: inserting_leaf.idx, newRoot: currentHash, currentRoot: oldRoot };
+  const path = siblings.map((node) => node.hash);
+
+  return { leafIndex: inserting_leaf.idx, newRoot: currentHash, currentRoot: oldRoot, merklePath: path };
 };
 
 export const applyNodeUpdates = async (nodeUpdates: MerkleNodeUpdate[]) => {
