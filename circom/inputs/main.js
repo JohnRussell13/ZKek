@@ -78,14 +78,18 @@ function getPath(index, tree, merkleDepth) {
 async function main() {
   const poseidon = await circomlibjs.buildPoseidon();
 
-  const secretKey = "124";
+  const secretKey = "123";
   const merkleIndex = 2;
   const merkleDepth = 20;
 
   const publicKey = hash(poseidon, [secretKey, "6"]);
 
-  const leaves = ["1", "2", publicKey, "4", "5", "6", "7", "8"];
-  // const leaves = ["123"];
+  // const leaves = ["1", "2", publicKey, "4", "5", "6", "7", "8"];
+  const leaves = [publicKey];
+
+  const nullifier = hash(poseidon, leaves);
+
+  console.log("Nullifier: " + nullifier);
 
   const zeros = generateZeroHashes(merkleDepth, poseidon);
   let cache = generateZeroHashes(merkleDepth, poseidon);
@@ -95,7 +99,7 @@ async function main() {
 
   let leaf;
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 1; i++) {
     // console.log(tree);
     // console.log(cache);
     // console.log("-----------");

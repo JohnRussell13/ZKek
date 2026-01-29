@@ -1,6 +1,8 @@
 use anchor_lang::prelude::*;
 
-use crate::{ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED, TRANSFER_AMOUNT_LAMPORTS, error::ErrorCode, state::MerkleTree};
+use crate::{
+    ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED, TRANSFER_AMOUNT_LAMPORTS, error::ErrorCode, groth16_utils::verify_groth16_proof, state::MerkleTree
+};
 
 #[event_cpi]
 #[derive(Accounts)]
@@ -23,21 +25,26 @@ pub fn handler(
     new_root: [u8; 32],
     old_root: [u8; 32],
     leaf_index: u32,
+    proof: [u8; 256],
 ) -> Result<()> {
     let merkle_tree = &mut ctx.accounts.merkle_tree;
 
-    if merkle_tree.current_leaf_index >= MAX_LEAVES {                                                                                                               
-      return err!(ErrorCode::TreeFull);                                                                                                                           
-    }              
+    if merkle_tree.current_leaf_index >= MAX_LEAVES {
+        return err!(ErrorCode::TreeFull);
+    }
 
-    if merkle_tree.current_leaf_index + 1 != leaf_index {                                                                                                           
-        return err!(ErrorCode::WrongLeafIndex);                                                                                                                     
+    if merkle_tree.current_leaf_index != leaf_index {
+        return err!(ErrorCode::WrongLeafIndex);
     }
 
     let current_root_index = merkle_tree.current_root_index as usize % ACTIVE_ROOTS;
+    msg!("CURRENT ROOT INDEX: {}", current_root_index);
     if merkle_tree.active_roots[current_root_index] != old_root {
         return err!(ErrorCode::OldRootNotActive);
     }
+
+    let public_inputs = [new_root, old_root];
+    verify_groth16_proof(&proof, &public_inputs).map_err(|_| error!(ErrorCode::InvalidProof))?;
 
     anchor_lang::system_program::transfer(
         CpiContext::new(

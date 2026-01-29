@@ -101,8 +101,8 @@ export const getPendingUpdate = (merkleRoot: string): PendingMerkleUpdate | unde
   return pendingUpdates.get(merkleRoot);
 };
 
-export const removePendingUpdate = (merkleRoot: string): boolean => { // TODO: DELETE ALL pendingUpdates
-  return pendingUpdates.delete(merkleRoot);
+export const removePendingUpdate = () => {
+  pendingUpdates.clear();
 };
 
 export const commitPendingUpdate = async (merkleRoot: string): Promise<boolean> => {
@@ -113,7 +113,7 @@ export const commitPendingUpdate = async (merkleRoot: string): Promise<boolean> 
   }
 
   await applyNodeUpdates(pendingUpdate.nodeUpdates);
-  removePendingUpdate(merkleRoot);
+  removePendingUpdate();
 
   return true;
 };
@@ -155,14 +155,4 @@ export const getMerkleProof = async (leaf: string) => {
 function hash(poseidon: any, x: string[]) {
   const F = poseidon.F;
   return F.toString(poseidon(x));
-}
-
-function generateZeroHashes(merkleDepth: number, poseidon: any): string[] {
-  const zeros: string[] = [];
-  zeros[0] = hash(poseidon, ["0", "7"]);
-
-  for (let i = 1; i <= merkleDepth; i++) {
-    zeros[i] = hash(poseidon, [zeros[i - 1], zeros[i - 1]]);
-  }
-  return zeros;
 }

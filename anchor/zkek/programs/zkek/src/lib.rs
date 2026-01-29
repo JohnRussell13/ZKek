@@ -1,8 +1,8 @@
 pub mod constants;
 pub mod error;
+pub mod groth16_utils;
 pub mod instructions;
 pub mod state;
-pub mod groth16_utils;
 
 use anchor_lang::prelude::*;
 
@@ -15,10 +15,7 @@ declare_id!("zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k");
 pub mod zkek {
     use super::*;
 
-    pub fn initialize(
-        ctx: Context<Initialize>,
-        fee: u16,
-    ) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>, fee: u16) -> Result<()> {
         initialize::handler(ctx, fee)
     }
 
@@ -27,8 +24,9 @@ pub mod zkek {
         new_root: [u8; 32],
         old_root: [u8; 32],
         leaf_index: u32,
+        proof: [u8; 256],
     ) -> Result<()> {
-        deposit::handler(ctx, new_root, old_root, leaf_index)
+        deposit::handler(ctx, new_root, old_root, leaf_index, proof)
     }
 
     pub fn withdraw(
@@ -40,10 +38,7 @@ pub mod zkek {
         withdraw::handler(ctx, nullifier, root, proof)
     }
 
-    pub fn update_fee(
-        ctx: Context<UpdateFee>,
-        new_fee: u16,
-    ) -> Result<()> {
+    pub fn update_fee(ctx: Context<UpdateFee>, new_fee: u16) -> Result<()> {
         update_fee::handler(ctx, new_fee)
     }
 

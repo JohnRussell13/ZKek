@@ -1,6 +1,12 @@
 use anchor_lang::prelude::*;
 
-use crate::{ANCHOR_DISCRIMINATOR, BASIS_POINTS, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, NULLIFIER_SEED, TRANSFER_AMOUNT_LAMPORTS, error::ErrorCode, groth16_utils::verify_groth16_proof, state::{GlobalState, MerkleTree, Nullifier}};
+use crate::{
+    error::ErrorCode,
+    groth16_utils::verify_groth16_proof,
+    state::{GlobalState, MerkleTree, Nullifier},
+    ANCHOR_DISCRIMINATOR, BASIS_POINTS, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, NULLIFIER_SEED,
+    TRANSFER_AMOUNT_LAMPORTS,
+};
 
 #[derive(Accounts)]
 #[instruction(nullifier:[u8; 32])]
@@ -46,17 +52,21 @@ pub fn handler(
         return err!(ErrorCode::InvalidAdmin);
     }
 
-    if !ctx.accounts.merkle_tree.active_roots.iter().any(|active_root| active_root == &root) {
+    if !ctx
+        .accounts
+        .merkle_tree
+        .active_roots
+        .iter()
+        .any(|active_root| active_root == &root)
+    {
         return err!(ErrorCode::OldRootNotActive);
     }
 
     let public_inputs = [root, nullifier];
-    verify_groth16_proof(&proof, &public_inputs)
-        .map_err(|_| error!(ErrorCode::InvalidProof))?;
+    verify_groth16_proof(&proof, &public_inputs).map_err(|_| error!(ErrorCode::InvalidProof))?;
 
-    let fee_amount = TRANSFER_AMOUNT_LAMPORTS
-        * ctx.accounts.global_state.fee as u64
-        / BASIS_POINTS as u64;
+    let fee_amount =
+        TRANSFER_AMOUNT_LAMPORTS * ctx.accounts.global_state.fee as u64 / BASIS_POINTS as u64;
     let recipient_amount = TRANSFER_AMOUNT_LAMPORTS - fee_amount;
 
     let recipient_account_info = ctx.accounts.signer.to_account_info();

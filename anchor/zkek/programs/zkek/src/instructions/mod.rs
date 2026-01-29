@@ -1,9 +1,9 @@
-pub mod initialize;
 pub mod deposit;
-pub mod withdraw;
+pub mod initialize;
 pub mod update_fee;
+pub mod withdraw;
 
-pub use initialize::*;
 pub use deposit::*;
-pub use withdraw::*;
+pub use initialize::*;
 pub use update_fee::*;
+pub use withdraw::*;
