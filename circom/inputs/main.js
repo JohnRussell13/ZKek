@@ -84,58 +84,56 @@ async function main() {
 
   const publicKey = hash(poseidon, [secretKey, "6"]);
 
-  console.log("PUB KEY: " + publicKey);
-
   // const leaves = ["1", "2", publicKey, "4", "5", "6", "7", "8"];
-  const leaves = ["123"];
+  const leaves = [publicKey];
 
   const nullifier = hash(poseidon, leaves);
 
   console.log("Nullifier: " + nullifier);
 
-  // const zeros = generateZeroHashes(merkleDepth, poseidon);
-  // let cache = generateZeroHashes(merkleDepth, poseidon);
+  const zeros = generateZeroHashes(merkleDepth, poseidon);
+  let cache = generateZeroHashes(merkleDepth, poseidon);
 
-  // let tree;
-  // tree = init_tree(zeros, merkleDepth);
+  let tree;
+  tree = init_tree(zeros, merkleDepth);
 
-  // let leaf;
+  let leaf;
 
-  // for (let i = 0; i < 8; i++) {
-  //   // console.log(tree);
-  //   // console.log(cache);
-  //   // console.log("-----------");
+  for (let i = 0; i < 1; i++) {
+    // console.log(tree);
+    // console.log(cache);
+    // console.log("-----------");
 
-  //   leaf = hash(poseidon, [`${leaves[i]}`, "7"]);
-  //   [cache, tree] = adjustCache(
-  //     leaf,
-  //     i,
-  //     tree,
-  //     zeros,
-  //     cache,
-  //     poseidon,
-  //     merkleDepth,
-  //   );
-  // }
+    leaf = hash(poseidon, [`${leaves[i]}`, "7"]);
+    [cache, tree] = adjustCache(
+      leaf,
+      i,
+      tree,
+      zeros,
+      cache,
+      poseidon,
+      merkleDepth,
+    );
+  }
 
-  // const merklePath = getPath(merkleIndex, tree, merkleDepth);
-  // const merkleRoot = tree[merkleDepth][0];
-  // const nullifierHash = hash(poseidon, [secretKey]);
+  const merklePath = getPath(merkleIndex, tree, merkleDepth);
+  const merkleRoot = tree[merkleDepth][0];
+  const nullifierHash = hash(poseidon, [secretKey]);
 
-  // const input = {
-  //   secretKey,
-  //   merkleIndex,
-  //   merklePath,
-  //   merkleRoot,
-  //   nullifierHash,
-  // };
+  const input = {
+    secretKey,
+    merkleIndex,
+    merklePath,
+    merkleRoot,
+    nullifierHash,
+  };
 
-  // fs.writeFileSync("withdraw.json", JSON.stringify(input, null, 2));
-  // console.log("Input written to withdraw.json");
+  fs.writeFileSync("withdraw.json", JSON.stringify(input, null, 2));
+  console.log("Input written to withdraw.json");
 
-  // console.log(publicKey);
-  // console.log(tree);
-  // console.log(input);
+  console.log(publicKey);
+  console.log(tree);
+  console.log(input);
 }
 
 main();
