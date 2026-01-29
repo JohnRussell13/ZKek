@@ -16,7 +16,12 @@ template Deposit(merkleDepth) {
 	merklePath ==> merkleTreeChecker.merklePath;
 	publicKey ==> merkleTreeChecker.publicKey;
 
-	signal dummy <== oldMerkleRoot * oldMerkleRoot;
+
+	component oldMerkleTreeChecker = MerkleTreeCheck(merkleDepth);
+	oldMerkleRoot ==> oldMerkleTreeChecker.merkleRoot;
+	merkleIndex ==> oldMerkleTreeChecker.merkleIndex;
+	merklePath ==> oldMerkleTreeChecker.merklePath;
+	0 ==> oldMerkleTreeChecker.publicKey;
 }
 
 component main{public [merkleRoot, oldMerkleRoot]} = Deposit(20);
