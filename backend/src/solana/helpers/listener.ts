@@ -79,7 +79,7 @@ export async function startDepositEventListener(rpcUrl: string, wsUrl: string, p
     try {
       const event = await getDepositEventFromTransaction(rpcUrl, signature, programAddress);
       if (event) {
-        const merkleRoot = Buffer.from(event.newRoot).toString("hex");
+        const merkleRoot = BigInt("0x" + Buffer.from(event.newRoot).toString("hex")).toString();
         console.log(`Deposit event received - NewRoot: ${merkleRoot}`);
 
         const committed = await commitPendingUpdate(merkleRoot);

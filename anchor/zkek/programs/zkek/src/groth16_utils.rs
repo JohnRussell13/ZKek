@@ -3,7 +3,7 @@ use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Compress, Validate
 use groth16_solana::{errors::Groth16Error, groth16::Groth16Verifier};
 use std::ops::Neg;
 
-use crate::VERIFYING_KEY;
+use crate::{VerifyingKey, WITHDRAW_VERIFYING_KEY, DEPOSIT_VERIFYING_KEY};
 
 // proof_a (G1 point): bytes 0..64
 // proof_b (G2 point): bytes 64..192
@@ -11,6 +11,7 @@ use crate::VERIFYING_KEY;
 pub fn verify_groth16_proof<const NR_INPUTS: usize>(
     proof: &[u8; 256],
     public_inputs: &[[u8; 32]; NR_INPUTS],
+    veryfing_key_type: VerifyingKey,
 ) -> Result<(), Groth16Error> {
     let proof_a = negate_g1_point(&proof[0..64])?;
 
@@ -22,8 +23,13 @@ pub fn verify_groth16_proof<const NR_INPUTS: usize>(
         .try_into()
         .map_err(|_| Groth16Error::InvalidG1Length)?;
 
+    let verifying_key = match veryfing_key_type {
+        VerifyingKey::DEPOSIT => DEPOSIT_VERIFYING_KEY,
+        VerifyingKey::WITHDRAW => WITHDRAW_VERIFYING_KEY
+    };
+
     let mut verifier =
-        Groth16Verifier::new(&proof_a, &proof_b, &proof_c, public_inputs, &VERIFYING_KEY)?;
+        Groth16Verifier::new(&proof_a, &proof_b, &proof_c, public_inputs, &verifying_key)?;
 
     verifier.verify()
 }

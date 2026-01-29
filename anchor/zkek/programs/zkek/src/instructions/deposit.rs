@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED, TRANSFER_AMOUNT_LAMPORTS, error::ErrorCode, groth16_utils::verify_groth16_proof, state::MerkleTree
+    ACTIVE_ROOTS, MAX_LEAVES, MERKLE_TREE_SEED, TRANSFER_AMOUNT_LAMPORTS, VerifyingKey, error::ErrorCode, groth16_utils::verify_groth16_proof, state::MerkleTree
 };
 
 #[event_cpi]
@@ -44,7 +44,7 @@ pub fn handler(
     }
 
     let public_inputs = [new_root, old_root];
-    verify_groth16_proof(&proof, &public_inputs).map_err(|_| error!(ErrorCode::InvalidProof))?;
+    verify_groth16_proof(&proof, &public_inputs, VerifyingKey::DEPOSIT).map_err(|_| error!(ErrorCode::InvalidProof))?;
 
     anchor_lang::system_program::transfer(
         CpiContext::new(

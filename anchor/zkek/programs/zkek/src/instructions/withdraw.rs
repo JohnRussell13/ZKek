@@ -1,11 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    error::ErrorCode,
-    groth16_utils::verify_groth16_proof,
-    state::{GlobalState, MerkleTree, Nullifier},
-    ANCHOR_DISCRIMINATOR, BASIS_POINTS, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, NULLIFIER_SEED,
-    TRANSFER_AMOUNT_LAMPORTS,
+    ANCHOR_DISCRIMINATOR, BASIS_POINTS, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, NULLIFIER_SEED, TRANSFER_AMOUNT_LAMPORTS, VerifyingKey, error::ErrorCode, groth16_utils::verify_groth16_proof, state::{GlobalState, MerkleTree, Nullifier}
 };
 
 #[derive(Accounts)]
@@ -63,7 +59,7 @@ pub fn handler(
     }
 
     let public_inputs = [root, nullifier];
-    verify_groth16_proof(&proof, &public_inputs).map_err(|_| error!(ErrorCode::InvalidProof))?;
+    verify_groth16_proof(&proof, &public_inputs, VerifyingKey::WITHDRAW).map_err(|_| error!(ErrorCode::InvalidProof))?;
 
     let fee_amount =
         TRANSFER_AMOUNT_LAMPORTS * ctx.accounts.global_state.fee as u64 / BASIS_POINTS as u64;

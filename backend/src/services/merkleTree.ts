@@ -94,6 +94,7 @@ export const applyNodeUpdates = async (nodeUpdates: MerkleNodeUpdate[]) => {
 };
 
 export const storePendingUpdate = (merkleRoot: string, update: PendingMerkleUpdate) => {
+  console.log("NEW PENDING ROOT ADDED: " + merkleRoot);
   pendingUpdates.set(merkleRoot, update);
 };
 
