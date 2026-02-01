@@ -54,7 +54,7 @@ export const addNewLeaf = async (leaf: string) => {
   nodeUpdates.push({
     level: LEVEL_ZERO,
     idx: currentIdx,
-    hash: leaf,
+    hash: currentHash,
   });
 
   for (let i = 0; i < MERKLE_DEPTH; i++) {
@@ -94,6 +94,7 @@ export const applyNodeUpdates = async (nodeUpdates: MerkleNodeUpdate[]) => {
 };
 
 export const storePendingUpdate = (merkleRoot: string, update: PendingMerkleUpdate) => {
+  console.log("NEW PENDING ROOT ADDED: " + merkleRoot);
   pendingUpdates.set(merkleRoot, update);
 };
 
@@ -122,14 +123,15 @@ export const getAllPendingUpdates = (): Map<string, PendingMerkleUpdate> => {
   return pendingUpdates;
 };
 
-export const getMerkleProof = async (leaf: string) => {
-  const leafNode = await getMerkleNodeByLevelAndHash(LEVEL_ZERO, leaf);
+export const getMerkleProof = async (leafIndex: number) => {
+  const leafNode = await getMerkleNodeByLevelAndIdx(LEVEL_ZERO, leafIndex);
 
   if (!leafNode) {
     return null;
   }
 
-  const leafIndex = leafNode.idx;
+  const rootNode = await getMerkleNodeByLevelAndIdx(MERKLE_DEPTH, 0);
+  const merkleRoot = rootNode.hash;
 
   const siblingQueries: Array<{ level: number; idx: number }> = [];
   let tempIdx = leafIndex;
@@ -148,6 +150,7 @@ export const getMerkleProof = async (leaf: string) => {
 
   return {
     leafIndex,
+    merkleRoot,
     merklePath,
   };
 };

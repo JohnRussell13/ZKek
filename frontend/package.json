@@ -1,0 +1,48 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@codama/nodes-from-anchor": "^1.3.8",
+    "@codama/renderers-js": "^1.6.0",
+    "@codama/renderers-rust": "^1.2.9",
+    "@reown/appkit": "^1.8.17",
+    "@reown/appkit-adapter-solana": "^1.8.17",
+    "@solana/client": "^1.7.0",
+    "@solana/kit": "^5.5.1",
+    "@solana/react-hooks": "^1.4.1",
+    "@types/circomlibjs": "^0.1.6",
+    "@types/snarkjs": "^0.7.9",
+    "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "codama": "^1.5.0",
+    "crypto": "^1.0.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "snarkjs": "^0.7.6"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4",
+    "vite-plugin-node-polyfills": "^0.25.0"
+  }
+}

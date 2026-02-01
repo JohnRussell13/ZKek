@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:17-alpine
     platform: linux/amd64
-    container_name: ghost_pay_postgres
+    container_name: zkek_postgres
     environment:
       - POSTGRES_DB=${DATABASE_NAME}
       - POSTGRES_USER=${DATABASE_USER}

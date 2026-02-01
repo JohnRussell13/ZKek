@@ -1,11 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::{
-    error::ErrorCode,
-    groth16_utils::verify_groth16_proof,
-    state::{GlobalState, MerkleTree, Nullifier},
-    ANCHOR_DISCRIMINATOR, BASIS_POINTS, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, NULLIFIER_SEED,
-    TRANSFER_AMOUNT_LAMPORTS,
+    ANCHOR_DISCRIMINATOR, BASIS_POINTS, GLOBAL_STATE_SEED, MERKLE_TREE_SEED, NULLIFIER_SEED, TRANSFER_AMOUNT_LAMPORTS, VerifyingKey, error::ErrorCode, groth16_utils::verify_groth16_proof, state::{GlobalState, MerkleTree, Nullifier}
 };
 
 #[derive(Accounts)]
@@ -37,6 +33,7 @@ pub struct Withdraw<'info> {
     pub nullifier_account: Account<'info, Nullifier>,
 
     /// CHECK: Admin account is validated against global_state.admin in the handler
+    #[account(mut)]
     pub admin: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
@@ -52,6 +49,8 @@ pub fn handler(
         return err!(ErrorCode::InvalidAdmin);
     }
 
+    msg!("PLS");
+
     if !ctx
         .accounts
         .merkle_tree
@@ -63,7 +62,9 @@ pub fn handler(
     }
 
     let public_inputs = [root, nullifier];
-    verify_groth16_proof(&proof, &public_inputs).map_err(|_| error!(ErrorCode::InvalidProof))?;
+    verify_groth16_proof(&proof, &public_inputs, VerifyingKey::WITHDRAW).map_err(|_| error!(ErrorCode::InvalidProof))?;
+
+    msg!("PLS");
 
     let fee_amount =
         TRANSFER_AMOUNT_LAMPORTS * ctx.accounts.global_state.fee as u64 / BASIS_POINTS as u64;
@@ -73,9 +74,13 @@ pub fn handler(
     let admin_account_info = ctx.accounts.admin.to_account_info();
     let merkle_tree_account_info = ctx.accounts.merkle_tree.to_account_info();
 
+    msg!("PLS");
+
     **merkle_tree_account_info.try_borrow_mut_lamports()? -= TRANSFER_AMOUNT_LAMPORTS;
     **recipient_account_info.try_borrow_mut_lamports()? += recipient_amount;
     **admin_account_info.try_borrow_mut_lamports()? += fee_amount;
+
+    msg!("PLS");
 
     Ok(())
 }

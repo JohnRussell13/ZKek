@@ -1,5 +1,5 @@
 {
-  "address": "zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k",
+  "address": "78MWuTNrZVxGBnMop6ZcJmEbM4yQaUHCkDea2B5NnSjB",
   "metadata": {
     "name": "zkek",
     "version": "0.1.0",
@@ -63,6 +63,12 @@
         {
           "name": "leaf_index",
           "type": "u32"
+        },
+        {
+          "name": "proof",
+          "type": {
+            "array": ["u8", 256]
+          }
         }
       ]
     },
@@ -77,7 +83,7 @@
         },
         {
           "name": "program",
-          "address": "zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k"
+          "address": "78MWuTNrZVxGBnMop6ZcJmEbM4yQaUHCkDea2B5NnSjB"
         },
         {
           "name": "program_data"
@@ -196,7 +202,8 @@
           }
         },
         {
-          "name": "admin"
+          "name": "admin",
+          "writable": true
         },
         {
           "name": "system_program",

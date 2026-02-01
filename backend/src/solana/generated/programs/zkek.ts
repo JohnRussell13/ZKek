@@ -21,7 +21,7 @@ import {
 } from "../instructions";
 
 export const ZKEK_PROGRAM_ADDRESS =
-  "zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k" as Address<"zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k">;
+  "78MWuTNrZVxGBnMop6ZcJmEbM4yQaUHCkDea2B5NnSjB" as Address<"78MWuTNrZVxGBnMop6ZcJmEbM4yQaUHCkDea2B5NnSjB">;
 
 export enum ZkekAccount {
   GlobalState,
@@ -132,7 +132,7 @@ export function identifyZkekInstruction(
 }
 
 export type ParsedZkekInstruction<
-  TProgram extends string = "zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k",
+  TProgram extends string = "78MWuTNrZVxGBnMop6ZcJmEbM4yQaUHCkDea2B5NnSjB",
 > =
   | ({
       instructionType: ZkekInstruction.Deposit;

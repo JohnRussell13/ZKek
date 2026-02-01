@@ -25,20 +25,20 @@ export const initiateDeposit = async (req: Request, res: Response) => {
 };
 
 export const initiateWithdraw = async (req: Request, res: Response) => {
-  const { leaf } = req.body; // TODO: use index
+  const { leafIndex } = req.body;
 
-  if (!leaf) {
-    return res.json({ error: "Leaf must be provided!" });
+  if (leafIndex === undefined || leafIndex === null) {
+    return res.json({ error: "Leaf index must be provided!" });
   }
 
-  const result = await getMerkleProof(leaf);
+  const result = await getMerkleProof(leafIndex);
 
   if (!result) {
     return res.json({ error: "Leaf not found in the merkle tree" });
   }
 
   return res.json({
-    leafIndex: result.leafIndex,
+    merkleRoot: result.merkleRoot,
     merklePath: result.merklePath,
   });
 };
