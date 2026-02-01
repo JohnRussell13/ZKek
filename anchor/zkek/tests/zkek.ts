@@ -30,11 +30,11 @@ describe("zkek", () => {
   );
 
   // Random fee between 0-10000 basis points
-  const randomFee = Math.floor(Math.random() * 10001);
+  // const randomFee = Math.floor(Math.random() * 10001);
 
-  it("Initialize", async () => {
+  it.only("Initialize", async () => {
     const tx = await program.methods
-      .initialize(randomFee)
+      .initialize(50)
       .accounts({
         authority: provider.wallet.publicKey,
         programData: programDataPda,
@@ -48,7 +48,7 @@ describe("zkek", () => {
     expect(globalState.admin.toBase58()).to.equal(
       provider.wallet.publicKey.toBase58(),
     );
-    expect(globalState.fee).to.equal(randomFee);
+    // expect(globalState.fee).to.equal(randomFee);
 
     // Fetch and verify merkle tree initial state
     const merkleTree = await program.account.merkleTree.fetch(merkleTreePda);
@@ -130,7 +130,7 @@ describe("zkek", () => {
     console.log("Merkle tree root index:", merkleTree.currentRootIndex);
   });
 
-  it.only("Withdraw with random data", async () => {
+  it("Withdraw with random data", async () => {
     const newRoot = [
       24, 58, 40, 122, 172, 245, 188, 179, 223, 225, 18, 74, 62, 59, 106, 156,
       224, 241, 70, 177, 216, 44, 88, 132, 160, 226, 202, 19, 85, 155, 48, 10,

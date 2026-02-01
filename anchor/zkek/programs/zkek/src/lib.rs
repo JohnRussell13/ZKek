@@ -9,7 +9,7 @@ use anchor_lang::prelude::*;
 pub use constants::*;
 pub use instructions::*;
 
-declare_id!("zKekB3jevvdaYM9HbQ4eqJq7kX6eqoGzVrBKkmUyK1k");
+declare_id!("78MWuTNrZVxGBnMop6ZcJmEbM4yQaUHCkDea2B5NnSjB");
 
 #[program]
 pub mod zkek {

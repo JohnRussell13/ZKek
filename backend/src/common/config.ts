@@ -8,6 +8,6 @@ const constructDBUrl = () => {
 export const CONFIG = {
   port: Number(process.env.PORT || 3000),
   dbUrl: constructDBUrl(),
-  solanaRpcUrl: process.env.RPC_URL ?? "http://localhost:8899",
-  solanaWsUrl: process.env.WS_URL ?? "ws://localhost:8900/",
+  solanaRpcUrl: process.env.RPC_URL ?? "https://api.devnet.solana.com",
+  solanaWsUrl: process.env.WS_URL ?? "wss://api.devnet.solana.com",
 };

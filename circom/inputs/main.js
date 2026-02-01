@@ -85,11 +85,11 @@ async function main() {
   const publicKey = hash(poseidon, [secretKey, "6"]);
 
   // // const leaves = ["1", "2", publicKey, "4", "5", "6", "7", "8"];
-  // const leaves = [publicKey];
+  const leaves = [publicKey];
 
-  // const nullifier = hash(poseidon, leaves);
+  const nullifier = hash(poseidon, [secretKey]);
 
-  // console.log("Nullifier: " + nullifier);
+  console.log("Nullifier: " + nullifier);
 
   // const zeros = generateZeroHashes(merkleDepth, poseidon);
   // let cache = generateZeroHashes(merkleDepth, poseidon);
